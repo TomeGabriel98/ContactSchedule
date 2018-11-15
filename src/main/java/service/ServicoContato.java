@@ -3,17 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package service;
 
 import java.util.List;
+
+import model.Contato;
 
 /**
  *
  * @author fabriciogmc
  */
-public interface ContatoDAO {
+public interface ServicoContato {
     public Contato inserir(Contato c);
-    public Contato buscarPorParteNome(String parteNome);
+    public Contato inserir(String nome, String tel,
+                           String email, String end);
+    public List<Contato> buscarPorParteNome(String parteNome);
     public boolean removerContato(Contato c);
     public Contato atualizarContato(Contato cAnt, 
                                     Contato cAtual);

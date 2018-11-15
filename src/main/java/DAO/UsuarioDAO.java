@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package DAO;
 
 import java.util.List;
 
-/**
- *
- * @author fabriciogmc
- */
+import model.Usuario;
+
 public interface UsuarioDAO {
     public Usuario inserir(Usuario u);
     public Usuario buscarPorNomeUsuario(String nomeUsuario);

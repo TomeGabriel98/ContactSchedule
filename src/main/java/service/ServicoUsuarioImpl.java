@@ -3,40 +3,48 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import DAO.UsuarioDAOImpl;
+import model.Contato;
+import model.Cripto;
+import model.Usuario;
 import view.TelaLogin;
+import view.TelaPrincipal;
 
-/**
- *
- * @author fabriciogmc
- */
 public class ServicoUsuarioImpl implements
-             ServicoUsuario{
+             ServicoUsuario, Cripto{
 	
 	private String nomeCrip, senhaCrip;
+	public static String usuario;
     public boolean disp;
     private boolean validaUser, validaPass;
 	public boolean exist;
+	private Usuario user;
+	UsuarioDAOImpl usuarios = new UsuarioDAOImpl();
 
     public ServicoUsuarioImpl(String nome_arq_dados_u){
         //implementar. passar referÃªncia ao instanciar o DAO
+    	
     }
     
     @Override
     public Usuario inserir(Usuario u) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	return usuarios.inserir(u);
     }
     
     @Override
-    public Usuario inserir(String nomeUsuario, String senha, List<Contato> contatos) {
+    public Usuario inserir(String nomeUsuario, String senha, String confirmaSenha, 
+    		List<Contato> contatos) throws IOException {
     	disp = false;
         nomeCrip = "";
         senhaCrip = "";
@@ -45,19 +53,41 @@ public class ServicoUsuarioImpl implements
         validaUser = nomeUsuario.matches("[a-zA-Z0-9]+");
         validaPass = senha.matches("[a-zA-Z0-9]+");
         
-        if(!valida(nomeCrip, validaUser)) return;
+        if(!validaUser(nomeCrip, validaUser)) return null;
         
-        buscarPorNomeUsuario(nomeCrip);
-        if(exist) return;
+        try {
+            exist = true;
+            FileReader arquivo = new FileReader("users.txt");
+            @SuppressWarnings("resource")
+            BufferedReader leitor = new BufferedReader(arquivo);
+            String linha = leitor.readLine();
+            String[] separe;
+
+            while (linha != null) {
+                separe = linha.split("; ");
+                linha = leitor.readLine();
+                if (separe[0].trim().equalsIgnoreCase(nomeCrip)) {
+                    JOptionPane.showMessageDialog(null, "Este nome de usuário já existe, tente outro!");
+                    exist = false;
+
+                    return null;
+				}
+            }
+
+            leitor.close();
+		} catch (FileNotFoundException e) {
+			exist = true;
+			//e.printStackTrace();
+		}
+        if(!exist) return null;
         
-        if(!valida(senha, validaPass)) return;
+        if(!validaUser(senhaCrip, validaPass)) return null;
         if(!confirmaSenha.equals(senha)){
             JOptionPane.showMessageDialog(null, "As senhas não coincidem, confirme a senha corretamente!");
 
-            return;
+            return null;
         }
         
-        nomeUsuario = nomeUsuario.toLowerCase();
         JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso");
         
         disp = true;
@@ -66,6 +96,11 @@ public class ServicoUsuarioImpl implements
         login.pack();
         login.setVisible(true);
         
+        Usuario u = new Usuario();
+        u.setNomeUsuario(nomeUsuario);
+        u.setSenha(confirmaSenha);
+        
+        return inserir(u);
     }
 
     @Override
@@ -85,7 +120,7 @@ public class ServicoUsuarioImpl implements
                     JOptionPane.showMessageDialog(null, "Este nome de usuário já existe, tente outro!");
                     exist = false;
 
-                    return;
+                    return null;
                 }
             }
 
@@ -93,6 +128,8 @@ public class ServicoUsuarioImpl implements
 		} catch (FileNotFoundException e) {
 	            exist = true;
 	            // e.printStackTrace();
+		} catch (IOException e) {
+			//e.printStackTrace();
 		}
     }
 
@@ -111,6 +148,7 @@ public class ServicoUsuarioImpl implements
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
     public String criptografa(String original, String cripto){
         for(int i = 0; i < original.length(); i++){
             char c = original.charAt(i);
@@ -124,6 +162,7 @@ public class ServicoUsuarioImpl implements
         return cripto;
     }
     
+    @Override
     public String descriptografa(String nome){
         String descrip = "";
         
@@ -139,20 +178,59 @@ public class ServicoUsuarioImpl implements
         return descrip;
     }
     
-    public boolean valida(String val, boolean match){
-        if(val.length() < 5 || val.length() > 15){
-            JOptionPane.showMessageDialog(null, "O nome de usuário e senha devem conter entre 5 e 15"
-                    + " caracteres!");
-            
-            return false;
-        } else if(!match){
-            JOptionPane.showMessageDialog(null, "O nome de usuário e senha devem conter somente"
-                    + " letras[a-z] e números[0-9]!");
-            
-            return false;
-        }
+    @Override
+    public boolean validaUser(String val, boolean match){
+    		if(val.length() < 5 || val.length() > 15){
+                JOptionPane.showMessageDialog(null, "O nome de usuário e senha devem conter entre 5 e 15"
+                        + " caracteres!");
+                
+                return false;
+            } else if(!match){
+                JOptionPane.showMessageDialog(null, "O nome de usuário e senha devem conter somente"
+                        + " letras[a-z] e números[0-9]!");
+                
+                return false;
+            }
+    	
+    	return true;
         
-        return true;
     }
+    
+    @Override
+    public void valida(String nome, String senha){
+    	disp = false;
+        String nomeCrip = "", senhaCrip = "";
+        File arquivo = new File("users.txt");
+        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
+            String linha = leitor.readLine();
+            String[] separe;
+            
+            nomeCrip = criptografa(nome, nomeCrip);
+            senhaCrip = criptografa(senha, senhaCrip);
+            
+            while(linha != null){
+                separe = linha.split("; ");
+                linha = leitor.readLine();
+                
+                if(separe[0].trim().equals(nomeCrip) && separe[1].trim().equals(senhaCrip)){
+                    disp = true;
+                    usuario = nome;
+                    TelaPrincipal principal = new TelaPrincipal();
+                    principal.setLocationRelativeTo(null);
+                    principal.pack();
+                    principal.setVisible(true);
+                    
+                    return;
+                }
+            }
+        } catch (IOException e) {
+			//e.printStackTrace();
+		}
+        
+        JOptionPane.showMessageDialog(null, "Nome de usuário e/ou senha incorretos, tente novamente!");
+        
+        
+    } 
+
 
 }

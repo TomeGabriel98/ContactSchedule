@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package sercice;
 
+import java.io.IOException;
 import java.util.List;
 
-/**
- *
- * @author fabriciogmc
- */
+import model.Contato;
+import model.Usuario;
+
 public interface ServicoUsuario {
     public Usuario inserir(Usuario u);
-    public Usuario inserir(String nomeUsuario, String senha, 
-                           List<Contato> contatos);
+    public Usuario inserir(String nomeUsuario, String senha, String confirmaSenha, 
+                           List<Contato> contatos) throws IOException;
     /* Deve retornar um objeto completo, incluindo
     seus contatos.*/
     public Usuario buscarPorNomeUsuario(String nomeUsuario);
@@ -30,5 +30,9 @@ public interface ServicoUsuario {
     /* monta uma lista de objetos completos
     de usuário, contendo inclusive todos os contatos
     de cada usuário*/
-    public List<Usuario> listarTodosUsuarios();       
+    public List<Usuario> listarTodosUsuarios();
+    
+    public boolean validaUser(String val, boolean match);
+    
+    public void valida(String nome, String senha);
 }

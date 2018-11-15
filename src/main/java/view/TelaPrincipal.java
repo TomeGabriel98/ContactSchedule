@@ -5,13 +5,8 @@
  */
 package view;
 
-import controller.Principal;
 import java.io.IOException;
 
-/**
- *
- * @author fabriciogmc
- */
 public class TelaPrincipal extends javax.swing.JFrame {
 
     /**
@@ -48,7 +43,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("OpÃ§Ãµes bÃ¡sicas da agenda de contatos.");
+        jLabel1.setText("Opções básicas da agenda de contatos.");
 
         listarContatos.setText("Listar Contatos");
         listarContatos.addActionListener(new java.awt.event.ActionListener() {
