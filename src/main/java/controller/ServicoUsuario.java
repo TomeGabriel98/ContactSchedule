@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sercice;
+package controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,5 +34,7 @@ public interface ServicoUsuario {
     
     public boolean validaUser(String val, boolean match);
     
-    public void valida(String nome, String senha);
+    public void valida(String nome, String senha) throws IOException;
+    
+    public void seguranca(String nome) throws IOException;
 }

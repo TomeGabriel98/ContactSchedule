@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.ServicoUsuarioImpl;
 import model.Contato;
-import service.ServicoUsuarioImpl;
 
 @SuppressWarnings("serial")
 public class TelaCadastroUsuarioAgenda extends javax.swing.JFrame {

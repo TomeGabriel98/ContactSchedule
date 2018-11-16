@@ -5,7 +5,11 @@
  */
 package view;
 
-import service.ServicoUsuarioImpl;
+import java.io.IOException;
+
+import javax.swing.JOptionPane;
+
+import controller.ServicoUsuarioImpl;
 
 @SuppressWarnings("serial")
 public class TelaLogin extends javax.swing.JFrame {
@@ -98,8 +102,13 @@ public class TelaLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     @SuppressWarnings("deprecation")
-	private void okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okActionPerformed
-        login.valida(nome.getText(), senha.getText());
+	private void okActionPerformed(java.awt.event.ActionEvent evt){//GEN-FIRST:event_okActionPerformed
+        try {
+			login.valida(nome.getText(), senha.getText());
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Não há nenhum usuário cadastrado no"
+					+ "sistema, por favor. cadastre-se!");
+		}
 		
         if(login.disp) dispose();
     }//GEN-LAST:event_okActionPerformed

@@ -18,11 +18,11 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 			String caminho = new File(path + usuario).getCanonicalPath();
 			PrintWriter arquivo = new PrintWriter(new FileWriter(caminho, true));
 			
-			String salva = u.getNomeUsuario() + " ;" + u.getSenha();
+			String salva = u.getNomeUsuario() + "; " + u.getSenha();
 			arquivo.append(salva);
             arquivo.println();
             
-            PrintWriter user = new PrintWriter(new FileWriter(path + "data_u" + u.getNomeUsuario() + ".txt-", true));
+            PrintWriter user = new PrintWriter(new FileWriter(path + "data_u" + u.getNomeUsuario() + ".txt", true));
             
             arquivo.flush();
             arquivo.close();

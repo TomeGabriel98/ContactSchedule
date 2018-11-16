@@ -5,10 +5,6 @@
  */
 package model;
 
-/**
- *
- * @author fabriciogmc
- */
 public class Contato {
     private String nome;
     private String telefone;
@@ -43,6 +39,14 @@ public class Contato {
         this.email = email;
     }
     
+    public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+    
     
     
     //Implementar a versão correta.
@@ -50,4 +54,6 @@ public class Contato {
     public boolean equals(Object o){
         return false;
     }
+
+	
 }

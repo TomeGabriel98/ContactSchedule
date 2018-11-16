@@ -3,23 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package service;
+package controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import model.Contato;
 
-/**
- *
- * @author fabriciogmc
- */
 public interface ServicoContato {
-    public Contato inserir(Contato c);
+    public Contato inserir(Contato c) throws IOException;
     public Contato inserir(String nome, String tel,
-                           String email, String end);
-    public List<Contato> buscarPorParteNome(String parteNome);
-    public boolean removerContato(Contato c);
+                           String email, String end) throws IOException;
+    public List<Contato> buscarPorParteNome(String parteNome) throws IOException;
+    public boolean removerContato(Contato c) throws IOException;
     public Contato atualizarContato(Contato cAnt, 
                                     Contato cAtual);
-    public List<Contato> listarTodosContatos(); 
+    public List<Contato> listarTodosContatos() throws IOException;
 }

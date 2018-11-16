@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package service;
+package controller;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -24,16 +25,16 @@ import view.TelaPrincipal;
 public class ServicoUsuarioImpl implements
              ServicoUsuario, Cripto{
 	
-	private String nomeCrip, senhaCrip;
+	private String nomeCrip, senhaCrip, arq_dados_u;
 	public static String usuario;
     public boolean disp;
     private boolean validaUser, validaPass;
 	public boolean exist;
-	private Usuario user;
 	UsuarioDAOImpl usuarios = new UsuarioDAOImpl();
+	List<Usuario> lista = new ArrayList<>();
 
     public ServicoUsuarioImpl(String nome_arq_dados_u){
-        //implementar. passar referÃªncia ao instanciar o DAO
+        arq_dados_u = nome_arq_dados_u;
     	
     }
     
@@ -57,9 +58,11 @@ public class ServicoUsuarioImpl implements
         
         try {
             exist = true;
-            FileReader arquivo = new FileReader("users.txt");
+            String path = "../ContactSchedule/src/main/resources/";
+			String caminho = new File(path + arq_dados_u).getCanonicalPath();
+			FileReader arquivo = new FileReader(caminho);
             @SuppressWarnings("resource")
-            BufferedReader leitor = new BufferedReader(arquivo);
+			BufferedReader leitor = new BufferedReader(arquivo);
             String linha = leitor.readLine();
             String[] separe;
 
@@ -97,40 +100,15 @@ public class ServicoUsuarioImpl implements
         login.setVisible(true);
         
         Usuario u = new Usuario();
-        u.setNomeUsuario(nomeUsuario);
-        u.setSenha(confirmaSenha);
+        u.setNomeUsuario(nomeCrip);
+        u.setSenha(senhaCrip);
         
         return inserir(u);
     }
 
     @Override
     public Usuario buscarPorNomeUsuario(String nomeUsuario) {
-    	try {
-            exist = true;
-            FileReader arquivo = new FileReader("users.txt");
-            @SuppressWarnings("resource")
-            BufferedReader leitor = new BufferedReader(arquivo);
-            String linha = leitor.readLine();
-            String[] separe;
-
-            while (linha != null) {
-                separe = linha.split("; ");
-                linha = leitor.readLine();
-                if (separe[0].trim().equalsIgnoreCase(nomeUsuario)) {
-                    JOptionPane.showMessageDialog(null, "Este nome de usuário já existe, tente outro!");
-                    exist = false;
-
-                    return null;
-                }
-            }
-
-            leitor.close();
-		} catch (FileNotFoundException e) {
-	            exist = true;
-	            // e.printStackTrace();
-		} catch (IOException e) {
-			//e.printStackTrace();
-		}
+    	return null;
     }
 
     @Override
@@ -145,7 +123,36 @@ public class ServicoUsuarioImpl implements
 
     @Override
     public List<Usuario> listarTodosUsuarios() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	try {
+			String path = "../ContactSchedule/src/main/resources/";
+			String nome = new File(path).getCanonicalPath();
+			File direct = new File(nome);
+			
+			String[] procura = direct.list();
+	        for(int i = 0; i < procura.length; i++){
+	            String name = procura[i];
+	            
+	            if(name.startsWith("data")){
+	                String[] separe = name.split("_u");
+	                String[] usuario = separe[1].split("\\.");
+	                String user = usuario[0];
+	                
+	                seguranca(user);
+	                if(!exist){
+	        			String caminho = new File(path + "data_u" + user + ".txt").getCanonicalPath();
+	                    File contato = new File(caminho);
+	                    
+	                    contato.delete();
+	                    
+	                }
+	            }
+	        }
+			
+		} catch (IOException e) {
+			//e.printStackTrace();
+		}
+    	
+    	return lista;
     }
     
     @Override
@@ -197,11 +204,12 @@ public class ServicoUsuarioImpl implements
     }
     
     @Override
-    public void valida(String nome, String senha){
+    public void valida(String nome, String senha) throws IOException{
     	disp = false;
         String nomeCrip = "", senhaCrip = "";
-        File arquivo = new File("users.txt");
-        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
+		String path = "../ContactSchedule/src/main/resources/";
+		String caminho = new File(path + arq_dados_u).getCanonicalPath();
+        try (BufferedReader leitor = new BufferedReader(new FileReader(caminho))) {
             String linha = leitor.readLine();
             String[] separe;
             
@@ -214,7 +222,7 @@ public class ServicoUsuarioImpl implements
                 
                 if(separe[0].trim().equals(nomeCrip) && separe[1].trim().equals(senhaCrip)){
                     disp = true;
-                    usuario = nome;
+                    usuario = nomeCrip;
                     TelaPrincipal principal = new TelaPrincipal();
                     principal.setLocationRelativeTo(null);
                     principal.pack();
@@ -223,14 +231,38 @@ public class ServicoUsuarioImpl implements
                     return;
                 }
             }
-        } catch (IOException e) {
-			//e.printStackTrace();
-		}
+        }
         
         JOptionPane.showMessageDialog(null, "Nome de usuário e/ou senha incorretos, tente novamente!");
         
         
-    } 
+    }
+    
+    @Override
+    public void seguranca(String nome) throws IOException {
+    	exist = true;
+    	//String descrip = "";
+		String path = "../ContactSchedule/src/main/resources/";
+		String caminho = new File(path + arq_dados_u).getCanonicalPath();
+		@SuppressWarnings("resource")
+		BufferedReader leitor = new BufferedReader(new FileReader(caminho));
+		String linha = leitor.readLine();
+		String[] separe;
+        
+        while (linha != null) {
+            separe = linha.split("; ");
+            linha = leitor.readLine();
+            /*descrip = descriptografa(separe[0]);
+            lista.add(descrip);*/
+            if (separe[0].trim().equals(nome)) {
+            	return;
+            }
+        }
+        
+        leitor.close();
+        exist = false;
+    	
+    }
 
 
 }
