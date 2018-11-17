@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import java.io.IOException;
 import java.util.List;
 
 import model.Usuario;
@@ -12,8 +13,8 @@ import model.Usuario;
 public interface UsuarioDAO {
     public Usuario inserir(Usuario u);
     public Usuario buscarPorNomeUsuario(String nomeUsuario);
-    public boolean removerUsuario(Usuario u);
+    public boolean removerUsuario(Usuario u) throws IOException;
     public Usuario atualizarUsuario(Usuario uAnt, 
                                     Usuario uAtual);
-    public List<Usuario> listarTodosUsuarios();    
+    public List<Usuario> listarTodosUsuarios() throws IOException;    
 }

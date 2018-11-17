@@ -25,8 +25,8 @@ import view.TelaPrincipal;
 public class ServicoUsuarioImpl implements
              ServicoUsuario, Cripto{
 	
-	private String nomeCrip, senhaCrip, arq_dados_u;
-	public static String usuario;
+	public String nomeCrip, senhaCrip, arq_dados_u;
+	public static String usuario, user;
     public boolean disp;
     private boolean validaUser, validaPass;
 	public boolean exist;
@@ -112,8 +112,32 @@ public class ServicoUsuarioImpl implements
     }
 
     @Override
-    public boolean removerUsuario(Usuario u) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean removerUsuario(Usuario u) throws IOException {
+    	nomeCrip = ""; 
+        senhaCrip = "";
+		String path = "../ContactSchedule/src/main/resources/";
+		String caminho = new File(path + arq_dados_u).getCanonicalPath();
+        try (BufferedReader leitor = new BufferedReader(new FileReader(caminho))) {
+            String linha = leitor.readLine();
+            String[] separe;
+            
+            nomeCrip = criptografa(u.getNomeUsuario(), nomeCrip);
+            senhaCrip = criptografa(u.getSenha(), senhaCrip);
+            
+            while(linha != null){
+                separe = linha.split("; ");
+                linha = leitor.readLine();
+                
+                if(separe[0].trim().equals(nomeCrip) && separe[1].trim().equals(senhaCrip)){
+                    
+                    //usuarios.removerUsuario(u);
+                	
+                	return true;
+                }
+            }
+        }
+        
+        return false;
     }
 
     @Override
@@ -135,16 +159,10 @@ public class ServicoUsuarioImpl implements
 	            if(name.startsWith("data")){
 	                String[] separe = name.split("_u");
 	                String[] usuario = separe[1].split("\\.");
-	                String user = usuario[0];
+	                user = usuario[0];
 	                
 	                seguranca(user);
-	                if(!exist){
-	        			String caminho = new File(path + "data_u" + user + ".txt").getCanonicalPath();
-	                    File contato = new File(caminho);
-	                    
-	                    contato.delete();
-	                    
-	                }
+	                if(!exist) usuarios.listarTodosUsuarios();
 	            }
 	        }
 			
@@ -206,7 +224,8 @@ public class ServicoUsuarioImpl implements
     @Override
     public void valida(String nome, String senha) throws IOException{
     	disp = false;
-        String nomeCrip = "", senhaCrip = "";
+        nomeCrip = ""; 
+        senhaCrip = "";
 		String path = "../ContactSchedule/src/main/resources/";
 		String caminho = new File(path + arq_dados_u).getCanonicalPath();
         try (BufferedReader leitor = new BufferedReader(new FileReader(caminho))) {
@@ -263,6 +282,10 @@ public class ServicoUsuarioImpl implements
         exist = false;
     	
     }
+    
+    /*public boolean equals(Object o) {
+    	
+    }*/
 
 
 }

@@ -1,11 +1,15 @@
 package DAO;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
+import controller.ServicoUsuarioImpl;
 import model.Usuario;
 
 public class UsuarioDAOImpl implements UsuarioDAO {
@@ -45,8 +49,44 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	}
 
 	@Override
-	public boolean removerUsuario(Usuario u) {
-		// TODO Auto-generated method stub
+	public boolean removerUsuario(Usuario u) throws IOException {
+		String path = "../ContactSchedule/src/main/resources/";
+		String caminho = new File(path + "data_u" + ServicoUsuarioImpl.user + ".txt").getCanonicalPath();
+        File contato = new File(caminho);
+        
+        contato.delete();
+        
+        ArrayList<String> array = new ArrayList<>();
+		caminho = new File(path + "users.txt").getCanonicalPath();
+		FileReader arquivo = new FileReader(caminho);
+		try (BufferedReader leitor = new BufferedReader(arquivo)) {
+			String linha = "";
+
+			while (linha != null) {
+				linha = leitor.readLine();
+				if (linha != null) {
+					if (linha.equals(u.getNomeUsuario())) {
+						continue;
+					} else
+						array.add(linha);
+				}
+
+			}
+		}
+
+		@SuppressWarnings("resource")
+		PrintWriter apaga = new PrintWriter(new FileWriter(caminho));
+		for (String adc : array) {
+			if (adc != null) {
+				apaga.printf(adc);
+				apaga.println();
+				
+				return true;
+			}
+		}
+
+		apaga.close();
+		
 		return false;
 	}
 
@@ -57,9 +97,15 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	}
 
 	@Override
-	public List<Usuario> listarTodosUsuarios() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Usuario> listarTodosUsuarios() throws IOException {
+		List<Usuario> lista = new ArrayList<>();
+		String path = "../ContactSchedule/src/main/resources/";
+		String caminho = new File(path + "data_u" + ServicoUsuarioImpl.user + ".txt").getCanonicalPath();
+        File contato = new File(caminho);
+        
+        contato.delete();
+        
+        return lista;
 	}
 	
 }

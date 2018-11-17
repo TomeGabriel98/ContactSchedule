@@ -21,7 +21,7 @@ public interface ServicoUsuario {
     /* A remoção de um usuário deve remover
     os contatos associados, via chamada de serviço
     de contatos.*/
-    public boolean removerUsuario(Usuario u);
+    public boolean removerUsuario(Usuario u) throws IOException;
     /* Uma atualização de usuário pode, por exemplo,
     simplesmente alterar os seus contatos, afetando
     a lista do objeto e os arquivos de dados.*/

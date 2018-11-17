@@ -41,6 +41,13 @@ public class Usuario {
     /* Implementar a versão correta.*/
     @Override
     public boolean equals(Object o){
+    	if(o instanceof Usuario) {
+    		Usuario u = ((Usuario)o);
+    		
+    		if(u.getNomeUsuario().equals(this.getNomeUsuario()) &&
+    				u.getSenha().equals(this.getSenha())) return true;
+    	}
+    	
         return false;
     }
 }

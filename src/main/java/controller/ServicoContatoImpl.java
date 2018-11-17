@@ -246,13 +246,19 @@ public class ServicoContatoImpl implements ServicoContato {
 				linha = leitor.readLine();
 				if (linha != null) {
 					if (linha.equals(c.getNome())) {
+						//contatos.removerContato(c);
 						continue;
+						//return true;
 					} else
+						//continue;
+					
 						array.add(linha);
 				}
 
 			}
 		}
+		
+		//return false;
 
 		PrintWriter apaga = new PrintWriter(new FileWriter(caminho));
 		for (String adc : array) {
@@ -267,7 +273,6 @@ public class ServicoContatoImpl implements ServicoContato {
 		JOptionPane.showMessageDialog(null, "Contato excluído com sucesso");
 
 		return true;
-
 	}
 
 	@Override

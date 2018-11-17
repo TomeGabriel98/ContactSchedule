@@ -15,19 +15,24 @@ plugins {
 }
 
 // Define the main class for the application
-mainClassName = 'TelaLogin'
+mainClassName = 'Aplicacao'
 
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     //compile 'com.google.guava:guava:23.0'
 
-    // Use JUnit test framework
-    testCompile 'junit:junit:4.12'
+    testCompileOnly 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
 // In this section you declare where to find the dependencies of your project
-/*repositories {
+repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
-}*/
+	mavenCentral()
+}
+
+test{
+	useJUnitPlatform()
+}
