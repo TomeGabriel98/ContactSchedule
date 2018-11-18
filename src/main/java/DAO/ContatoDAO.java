@@ -5,14 +5,15 @@
  */
 package DAO;
 
+import java.io.IOException;
 import java.util.List;
 
 import model.Contato;
 
 public interface ContatoDAO {
     public Contato inserir(Contato c);
-    public Contato buscarPorParteNome(String parteNome);
-    public boolean removerContato(Contato c);
+    public List<Contato> buscarPorParteNome(String parteNome) throws IOException;
+    public boolean removerContato(Contato c) throws IOException;
     public Contato atualizarContato(Contato cAnt, 
                                     Contato cAtual);
     public List<Contato> listarTodosContatos(); 

@@ -37,8 +37,6 @@ public class Usuario {
         this.contatos = contatos;
     }
     
-        
-    /* Implementar a versão correta.*/
     @Override
     public boolean equals(Object o){
     	if(o instanceof Usuario) {

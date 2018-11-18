@@ -49,9 +49,16 @@ public class Contato {
     
     
     
-    //Implementar a versão correta.
     @Override
     public boolean equals(Object o){
+    	if(o instanceof Contato) {
+    		Contato c = ((Contato)o);
+    		
+    		if(c.getNome().equals(this.getNome()) && c.getTelefone().equals(this.getTelefone()) && 
+    				c.getEmail().equals(this.getEmail()) &&
+    				c.getEndereco().equals(this.getEndereco())) return true;
+    	}
+    	
         return false;
     }
 

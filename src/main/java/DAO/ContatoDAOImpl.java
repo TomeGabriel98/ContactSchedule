@@ -10,8 +10,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
+import controller.ServicoContatoImpl;
 import controller.ServicoUsuarioImpl;
 import model.Contato;
+import view.TelaListagem;
 
 public class ContatoDAOImpl implements ContatoDAO {
 	
@@ -65,15 +69,58 @@ public class ContatoDAOImpl implements ContatoDAO {
 	}
 
 	@Override
-	public Contato buscarPorParteNome(String parteNome) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Contato> buscarPorParteNome(String parteNome) throws IOException {
+		List<Contato> lista = new ArrayList<>();
+		
+		TelaListagem listagem = new TelaListagem();
+		listagem.setVisible(true);
+		
+		for (String user : array) {
+			Contato c = new Contato();
+
+			c.setNome(user);
+			lista.add(c);
+		}
+
+		return lista;
+
 	}
 
 	@Override
-	public boolean removerContato(Contato c) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removerContato(Contato c) throws IOException {
+		ArrayList<String> array = new ArrayList<>();
+		String usuario = "data_u" + ServicoUsuarioImpl.usuario + ".txt";
+		String path = "../ContactSchedule/src/main/resources/";
+		String caminho = new File(path + usuario).getCanonicalPath();
+		FileReader arquivo = new FileReader(caminho);
+		try (BufferedReader leitor = new BufferedReader(arquivo)) {
+			String linha = "";
+
+			while (linha != null) {
+				linha = leitor.readLine();
+				if (linha != null) {
+					if (!linha.equals(c.getNome())) {
+						
+						array.add(linha);
+					}
+				}
+
+			}
+			
+			PrintWriter apaga = new PrintWriter(new FileWriter(caminho));
+			for (String adc : array) {
+				if (adc != null) {
+					apaga.printf(adc);
+					apaga.println();
+				}
+			}
+
+			apaga.close();
+
+			JOptionPane.showMessageDialog(null, "Contato excluído com sucesso");
+
+			return true;
+		}
 	}
 
 	@Override
@@ -84,8 +131,16 @@ public class ContatoDAOImpl implements ContatoDAO {
 
 	@Override
 	public List<Contato> listarTodosContatos() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Contato> lista = new ArrayList<>();
+		//ArrayList<String> array = ServicoContatoImpl.arrayListar;
+		/*for (String user : array) {
+			Contato c = new Contato();
+
+			c.setNome(user);
+			lista.add(c);
+		}*/
+
+		return lista;
 	}
 
 }

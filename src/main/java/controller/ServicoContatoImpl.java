@@ -9,9 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,6 @@ import javax.swing.JOptionPane;
 
 import DAO.ContatoDAOImpl;
 import model.Contato;
-import view.TelaListagem;
 
 public class ServicoContatoImpl implements ServicoContato {
 
@@ -31,7 +28,8 @@ public class ServicoContatoImpl implements ServicoContato {
 	public static int opcao;
 	public static String nome = "";
 	private String arq_dados_c;
-	ArrayList<String> array = new ArrayList<>();
+	public ArrayList<String> arrayListar = new ArrayList<>();
+	public ArrayList<String> arrayBuscar = new ArrayList<>();
 	public boolean disp, exist;
 	private boolean validaUser, validaTel;
 	private ContatoDAOImpl contatos = new ContatoDAOImpl();
@@ -42,40 +40,6 @@ public class ServicoContatoImpl implements ServicoContato {
 
 	@Override
 	public Contato inserir(Contato c) throws IOException {
-		try {
-			exist = true;
-			String path = "../ContactSchedule/src/main/resources/";
-			String caminho = new File(path + arq_dados_c).getCanonicalPath();
-			FileReader contato = new FileReader(caminho);
-			@SuppressWarnings("resource")
-			BufferedReader leitor = new BufferedReader(contato);
-			String linha = leitor.readLine();
-			String[] separe;
-
-			while (linha != null) {
-				separe = linha.split("; ");
-				linha = leitor.readLine();
-				if (separe[0].trim().equalsIgnoreCase(c.getNome())) {
-					JOptionPane.showMessageDialog(null, "Este contato já existe!");
-					exist = false;
-
-					return null;
-				}
-			}
-
-			leitor.close();
-		} catch (FileNotFoundException e) {
-			exist = true;
-			// e.printStackTrace();
-		}
-
-		disp = true;
-
-		if (opcao == 2)
-			JOptionPane.showMessageDialog(null, "Contato atualizado com sucesso!");
-		else
-			JOptionPane.showMessageDialog(null, "Contato cadastrado com sucesso!");
-
 		return contatos.inserir(c);
 	}
 
@@ -189,6 +153,40 @@ public class ServicoContatoImpl implements ServicoContato {
 		c.setTelefone(tel);
 		c.setEmail(email);
 		c.setEndereco(end);
+		
+		try {
+			exist = true;
+			String path = "../ContactSchedule/src/main/resources/";
+			String caminho = new File(path + arq_dados_c).getCanonicalPath();
+			FileReader contato = new FileReader(caminho);
+			@SuppressWarnings("resource")
+			BufferedReader leitor = new BufferedReader(contato);
+			String linha = leitor.readLine();
+			String[] separe;
+
+			while (linha != null) {
+				separe = linha.split("; ");
+				linha = leitor.readLine();
+				if (separe[0].trim().equalsIgnoreCase(c.getNome())) {
+					JOptionPane.showMessageDialog(null, "Este contato já existe!");
+					exist = false;
+
+					return null;
+				}
+			}
+
+			leitor.close();
+		} catch (FileNotFoundException e) {
+			exist = true;
+			// e.printStackTrace();
+		}
+
+		disp = true;
+
+		if (opcao == 2)
+			JOptionPane.showMessageDialog(null, "Contato atualizado com sucesso!");
+		else
+			JOptionPane.showMessageDialog(null, "Contato cadastrado com sucesso!");
 
 		return inserir(c);
 
@@ -196,7 +194,6 @@ public class ServicoContatoImpl implements ServicoContato {
 
 	@Override
 	public List<Contato> buscarPorParteNome(String parteNome) throws IOException {
-		List<Contato> lista = new ArrayList<>();
 		String path = "../ContactSchedule/src/main/resources/";
 		String caminho = new File(path + arq_dados_c).getCanonicalPath();
 		FileReader arquivo = new FileReader(caminho);
@@ -208,34 +205,24 @@ public class ServicoContatoImpl implements ServicoContato {
 				if (linha != null) {
 					String separe[] = linha.split("; ");
 					if (separe[0].trim().startsWith(parteNome))
-						array.add(linha);
+						arrayBuscar.add(linha);
 				}
 			}
 		}
 
-		if (array.isEmpty()) {
+		if (arrayBuscar.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Nenhum contato foi encontrado!");
 
 			return null;
 		} else {
 			nome = parteNome;
-			TelaListagem listagem = new TelaListagem();
-			listagem.setVisible(true);
-		}
-
-		for (String user : array) {
-			Contato c = new Contato();
-
-			c.setNome(user);
-			lista.add(c);
-		}
-
-		return lista;
+			
+			return contatos.buscarPorParteNome(nome);	
+		}	
 	}
 
 	@Override
 	public boolean removerContato(Contato c) throws IOException {
-		ArrayList<String> array = new ArrayList<>();
 		String path = "../ContactSchedule/src/main/resources/";
 		String caminho = new File(path + arq_dados_c).getCanonicalPath();
 		FileReader arquivo = new FileReader(caminho);
@@ -245,34 +232,19 @@ public class ServicoContatoImpl implements ServicoContato {
 			while (linha != null) {
 				linha = leitor.readLine();
 				if (linha != null) {
-					if (linha.equals(c.getNome())) {
-						//contatos.removerContato(c);
-						continue;
-						//return true;
-					} else
-						//continue;
-					
-						array.add(linha);
+					String separe1[] = linha.split(";");
+					String separe2[] = c.getNome().split(";");
+					if (separe1[0].equals(separe2[0])) {
+						contatos.removerContato(c);
+						
+						return true;
+					}
 				}
 
 			}
 		}
 		
-		//return false;
-
-		PrintWriter apaga = new PrintWriter(new FileWriter(caminho));
-		for (String adc : array) {
-			if (adc != null) {
-				apaga.printf(adc);
-				apaga.println();
-			}
-		}
-
-		apaga.close();
-
-		JOptionPane.showMessageDialog(null, "Contato excluído com sucesso");
-
-		return true;
+		return false;
 	}
 
 	@Override
@@ -293,7 +265,7 @@ public class ServicoContatoImpl implements ServicoContato {
 				while (linha != null) {
 					linha = leitor.readLine();
 					if (linha != null)
-						array.add(linha);
+						arrayListar.add(linha);
 				}
 			} else {
 				while (linha != null) {
@@ -301,12 +273,12 @@ public class ServicoContatoImpl implements ServicoContato {
 					if (linha != null) {
 						String separe[] = linha.split("; ");
 						if (separe[0].trim().contains(nome))
-							array.add(linha);
+							arrayListar.add(linha);
 					}
 				}
 			}
-
-			for (String user : array) {
+			
+			for (String user : arrayListar) {
 				Contato c = new Contato();
 
 				c.setNome(user);
@@ -314,6 +286,8 @@ public class ServicoContatoImpl implements ServicoContato {
 			}
 
 			return lista;
+			
+			//return contatos.listarTodosContatos();
 		}
 	}
 

@@ -51,7 +51,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	@Override
 	public boolean removerUsuario(Usuario u) throws IOException {
 		String path = "../ContactSchedule/src/main/resources/";
-		String caminho = new File(path + "data_u" + ServicoUsuarioImpl.user + ".txt").getCanonicalPath();
+		String caminho = new File(path + "data_u" + u.getNomeUsuario() + ".txt").getCanonicalPath();
         File contato = new File(caminho);
         
         contato.delete();
@@ -74,12 +74,13 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 			}
 		}
 
-		@SuppressWarnings("resource")
 		PrintWriter apaga = new PrintWriter(new FileWriter(caminho));
 		for (String adc : array) {
 			if (adc != null) {
 				apaga.printf(adc);
 				apaga.println();
+				
+				apaga.close();
 				
 				return true;
 			}
@@ -104,6 +105,23 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         File contato = new File(caminho);
         
         contato.delete();
+        
+        caminho = new File(path + "users.txt").getCanonicalPath();
+			FileReader arquivo = new FileReader(caminho);
+         @SuppressWarnings("resource")
+			BufferedReader leitor = new BufferedReader(arquivo);
+         String linha = leitor.readLine();
+         String[] separe;
+         Usuario u = new Usuario();
+
+         while (linha != null) {
+             separe = linha.split("; ");
+             linha = leitor.readLine();
+             u.setNomeUsuario(separe[0]);
+             
+         }
+         
+        if(!lista.contains(u)) lista.add(u);
         
         return lista;
 	}

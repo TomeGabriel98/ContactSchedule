@@ -130,7 +130,7 @@ public class ServicoUsuarioImpl implements
                 
                 if(separe[0].trim().equals(nomeCrip) && separe[1].trim().equals(senhaCrip)){
                     
-                    //usuarios.removerUsuario(u);
+                    usuarios.removerUsuario(u);
                 	
                 	return true;
                 }
@@ -165,6 +165,23 @@ public class ServicoUsuarioImpl implements
 	                if(!exist) usuarios.listarTodosUsuarios();
 	            }
 	        }
+	        
+	        String caminho = new File(path + arq_dados_u).getCanonicalPath();
+ 			FileReader arquivo = new FileReader(caminho);
+             @SuppressWarnings("resource")
+ 			BufferedReader leitor = new BufferedReader(arquivo);
+             String linha = leitor.readLine();
+             String[] separe;
+             Usuario u = new Usuario();
+
+             while (linha != null) {
+                 separe = linha.split("; ");
+                 linha = leitor.readLine();
+                 u.setNomeUsuario(separe[0]);
+                 
+             }
+             
+            if(!lista.contains(u)) lista.add(u);
 			
 		} catch (IOException e) {
 			//e.printStackTrace();
@@ -282,10 +299,5 @@ public class ServicoUsuarioImpl implements
         exist = false;
     	
     }
-    
-    /*public boolean equals(Object o) {
-    	
-    }*/
-
 
 }
