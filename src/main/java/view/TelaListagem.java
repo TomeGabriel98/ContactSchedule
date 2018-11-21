@@ -25,9 +25,14 @@ public class TelaListagem extends javax.swing.JFrame {
 	public TelaListagem() throws IOException {
 		initComponents();
 		ServicoContatoImpl.nome = "";
-		for (Contato c : contatos) {
-			listaContatos.add(c.getNome());
+		try {
+			for (Contato c : contatos) {
+				listaContatos.add(c.getNome());
+			}
+		} catch(NullPointerException e) {
+			listaContatos = null;
 		}
+		
 
 		// this.listaContatos.add("Fabrício; 22222222; prof.fabriciogmc@gmail.com, Rua
 		// do Fabrício");
@@ -108,7 +113,21 @@ public class TelaListagem extends javax.swing.JFrame {
 	}// GEN-LAST:event_listaContatosItemStateChanged
 
 	private void editarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_editarActionPerformed
+		String item = listaContatos.getSelectedItem();
+		String[] separe = item.split(";");
+		TelaCadastro edita = new TelaCadastro();
+		edita.setLocationRelativeTo(null);
+		edita.pack();
+		edita.setVisible(true);
+		Contato cAnt = new Contato();
+		
+		cAnt.setNome(separe[0]);
+		cAnt.setTelefone(separe[1]);
+		cAnt.setEmail(separe[2]);
+		cAnt.setEndereco(separe[3]);
+		edita.editarContato(cAnt);
 
+		dispose();
 	}// GEN-LAST:event_editarActionPerformed
 
 	private void listaContatosActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_listaContatosActionPerformed

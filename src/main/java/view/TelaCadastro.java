@@ -7,8 +7,11 @@ package view;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import controller.ServicoContatoImpl;
 import controller.ServicoUsuarioImpl;
+import model.Contato;
 
 @SuppressWarnings("serial")
 public class TelaCadastro extends javax.swing.JFrame {
@@ -18,6 +21,7 @@ public class TelaCadastro extends javax.swing.JFrame {
      */
 	
     ServicoContatoImpl cadastro = new ServicoContatoImpl("data_u" + ServicoUsuarioImpl.usuario + ".txt");
+    private Contato cAnt = null;
     
     public TelaCadastro() {
         initComponents();
@@ -121,10 +125,30 @@ public class TelaCadastro extends javax.swing.JFrame {
     private void enderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enderecoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_enderecoActionPerformed
+    
+    public void editarContato(Contato cAnt) {
+		this.cAnt = cAnt;
+		nome.setText(cAnt.getNome());
+		telefone.setText(cAnt.getTelefone());
+		email.setText(cAnt.getEmail());
+		endereco.setText(cAnt.getEndereco());
+	}
 
     private void cadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarActionPerformed
         try {
-			cadastro.inserir(nome.getText(), telefone.getText(), email.getText(), endereco.getText());
+        	if(cAnt != null) {
+        		Contato cAt = new Contato();
+        		cAt.setNome(nome.getText());
+				cAt.setTelefone(telefone.getText());
+				cAt.setEmail(email.getText());
+				cAt.setEndereco(endereco.getText());
+				cadastro.atualizarContato(cAnt, cAt);
+				
+				JOptionPane.showMessageDialog(null, "Cadastro atualizado com sucesso!");
+				dispose();
+        	}
+        	else
+        		cadastro.inserir(nome.getText(), telefone.getText(), email.getText(), endereco.getText());
 		} catch (IOException e) {
 			//e.printStackTrace();
 		}
