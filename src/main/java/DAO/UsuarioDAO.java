@@ -12,7 +12,7 @@ import model.Usuario;
 
 public interface UsuarioDAO {
     public Usuario inserir(Usuario u);
-    public Usuario buscarPorNomeUsuario(String nomeUsuario);
+    public Usuario buscarPorNomeUsuario(String nomeUsuario) throws IOException;
     public boolean removerUsuario(Usuario u) throws IOException;
     public Usuario atualizarUsuario(Usuario uAnt, 
                                     Usuario uAtual);

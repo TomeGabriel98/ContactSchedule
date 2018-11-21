@@ -17,6 +17,6 @@ public interface ServicoContato {
     public List<Contato> buscarPorParteNome(String parteNome) throws IOException;
     public boolean removerContato(Contato c) throws IOException;
     public Contato atualizarContato(Contato cAnt, 
-                                    Contato cAtual);
+                                    Contato cAtual) throws IOException;
     public List<Contato> listarTodosContatos() throws IOException;
 }

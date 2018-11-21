@@ -39,6 +39,15 @@ public class UsuarioDAOImplTest {
 	}
 	
 	@Test
+	public void buscarPorNomeUsuarioTest() throws IOException {
+		u.setNomeUsuario("gabriel");
+		u.setSenha("");
+		u.setContatos(null);
+		
+		assertEquals(u, usuario.buscarPorNomeUsuario("gabriel"));
+	}
+	
+	@Test
 	public void removerUsuarioTest() throws IOException {
 		u.setNomeUsuario("defgh");
 		u.setSenha("45678");

@@ -13,18 +13,22 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import controller.ServicoContatoImpl;
-import controller.ServicoUsuarioImpl;
 import model.Contato;
 import view.TelaListagem;
 
 public class ContatoDAOImpl implements ContatoDAO {
 	
+	private String arq_dados_c;
 	ArrayList<String> array = new ArrayList<>();
+	
+	public ContatoDAOImpl(String nome_arq_dados_c) {
+		arq_dados_c = nome_arq_dados_c;
+	}
 
 	@Override
 	public Contato inserir(Contato c) {
 		try {
-			String usuario = "data_u" + ServicoUsuarioImpl.usuario + ".txt";
+			String usuario = arq_dados_c;
 			String path = "../ContactSchedule/src/main/resources/";
 			String caminho = new File(path + usuario).getCanonicalPath();
 			PrintWriter escreve = new PrintWriter(new FileWriter(caminho, true));       
@@ -48,7 +52,7 @@ public class ContatoDAOImpl implements ContatoDAO {
 	                array.add(linha);
 	        }
 	        
-	        Collections.sort(array);   
+	        Collections.sort(array);
 			
 	        @SuppressWarnings("resource")
 			PrintWriter arquivo = new PrintWriter(new FileWriter(caminho));
@@ -89,17 +93,19 @@ public class ContatoDAOImpl implements ContatoDAO {
 	@Override
 	public boolean removerContato(Contato c) throws IOException {
 		ArrayList<String> array = new ArrayList<>();
-		String usuario = "data_u" + ServicoUsuarioImpl.usuario + ".txt";
+		String usuario = arq_dados_c;
 		String path = "../ContactSchedule/src/main/resources/";
 		String caminho = new File(path + usuario).getCanonicalPath();
 		FileReader arquivo = new FileReader(caminho);
 		try (BufferedReader leitor = new BufferedReader(arquivo)) {
-			String linha = "";
-
+			String linha = leitor.readLine();
+			String[] separe;
+			
 			while (linha != null) {
+				separe = linha.split("; ");
 				linha = leitor.readLine();
 				if (linha != null) {
-					if (!linha.equals(c.getNome())) {
+					if (!separe[0].equals(c.getNome())) {
 						
 						array.add(linha);
 					}
@@ -117,28 +123,32 @@ public class ContatoDAOImpl implements ContatoDAO {
 
 			apaga.close();
 
-			JOptionPane.showMessageDialog(null, "Contato excluído com sucesso");
+			//JOptionPane.showMessageDialog(null, "Contato excluído com sucesso");
 
 			return true;
 		}
 	}
 
 	@Override
-	public Contato atualizarContato(Contato cAnt, Contato cAtual) {
-		// TODO Auto-generated method stub
+	public Contato atualizarContato(Contato cAnt, Contato cAtual) throws IOException {
+		removerContato(cAnt);
+		
+		if(buscarPorParteNome(cAtual.getNome()) != null) return cAtual;
+		
 		return null;
 	}
 
 	@Override
 	public List<Contato> listarTodosContatos() {
+		array.clear();
 		List<Contato> lista = new ArrayList<>();
-		//ArrayList<String> array = ServicoContatoImpl.arrayListar;
-		/*for (String user : array) {
+		array = ServicoContatoImpl.arrayListar;
+		for (String user : array) {
 			Contato c = new Contato();
 
 			c.setNome(user);
 			lista.add(c);
-		}*/
+		}
 
 		return lista;
 	}

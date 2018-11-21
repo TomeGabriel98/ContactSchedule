@@ -17,7 +17,7 @@ public interface ServicoUsuario {
                            List<Contato> contatos) throws IOException;
     /* Deve retornar um objeto completo, incluindo
     seus contatos.*/
-    public Usuario buscarPorNomeUsuario(String nomeUsuario);
+    public Usuario buscarPorNomeUsuario(String nomeUsuario) throws IOException;
     /* A remoção de um usuário deve remover
     os contatos associados, via chamada de serviço
     de contatos.*/

@@ -2,12 +2,9 @@ package controller;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.*;
 
-import DAO.UsuarioDAOImpl;
 import model.Usuario;
 
 public class ServicoUsuarioImplTest {
@@ -32,9 +29,20 @@ public class ServicoUsuarioImplTest {
 		
 		assertAll("Teste de inserção de usuário: ",
 				() -> assertEquals(u, usuario.inserir("abcde", "12345", "12345", null)),
-				() -> assertEquals(null, usuario.inserir("gabriel", "12345", "12345", null)),
-				() -> assertEquals(null, usuario.inserir("defgh", "12345", "123456", null)));
+				() -> assertNull(usuario.inserir("gabriel", "12345", "12345", null)),
+				() -> assertNull(usuario.inserir("defgh", "12345", "123456", null)));
 		
+	}
+	
+	@Test
+	public void buscarPorNomeUsuarioTest() throws IOException {
+		u.setNomeUsuario("gabriel");
+		u.setSenha("");
+		u.setContatos(null);
+		
+		assertEquals(u, usuario.buscarPorNomeUsuario("gabriel"));
+		
+		assertNull(usuario.buscarPorNomeUsuario("ana"));
 	}
 	
 	@Test
@@ -42,12 +50,12 @@ public class ServicoUsuarioImplTest {
 		u.setNomeUsuario("abcde");
 		u.setSenha("12345");
 		
-		assertEquals(true, usuario.removerUsuario(u));
+		assertTrue(usuario.removerUsuario(u));
 		
 		u.setNomeUsuario("abcde");
 		u.setSenha(" ");
 		
-		assertEquals(false, usuario.removerUsuario(u));
+		assertFalse(usuario.removerUsuario(u));
 	}
 	
 	/*@Test
@@ -75,15 +83,16 @@ public class ServicoUsuarioImplTest {
 	@Test
 	public void validaUserTest() {
 		assertAll("Teste de validação de usuário:", 
-			() -> assertEquals(true, usuario.validaUser("defgh", true)),
-			() -> assertEquals(false, usuario.validaUser("defg", true)),
-			() -> assertEquals(false, usuario.validaUser("defgh", false)));
+			() -> assertTrue(usuario.validaUser("defgh", true)),
+			() -> assertFalse( usuario.validaUser("defg", true)),
+			() -> assertFalse(usuario.validaUser("defgh", false)));
 	}
 	
 	@Test
 	public void validaTest() throws IOException {
 		usuario.valida("adcdef", "12345");
 		assertNull(ServicoUsuarioImpl.usuario);
+		
 		
 		usuario.valida("gabriel", "12345");
 		assertNotNull(ServicoUsuarioImpl.usuario);
@@ -92,9 +101,9 @@ public class ServicoUsuarioImplTest {
 	@Test
 	public void segurancaTest() throws IOException {
 		usuario.seguranca("abcdef");
-		assertEquals(false, usuario.exist);
+		assertFalse(usuario.exist);
 		
 		usuario.seguranca("jdeulho");
-		assertEquals(true, usuario.exist);
+		assertTrue(usuario.exist);
 	}
 }

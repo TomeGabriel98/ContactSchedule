@@ -27,6 +27,7 @@ public class ServicoUsuarioImpl implements
 	
 	public String nomeCrip, senhaCrip, arq_dados_u;
 	public static String usuario, user;
+	public ArrayList<String> arrayBuscar = new ArrayList<>();
     public boolean disp;
     private boolean validaUser, validaPass;
 	public boolean exist;
@@ -70,7 +71,7 @@ public class ServicoUsuarioImpl implements
                 separe = linha.split("; ");
                 linha = leitor.readLine();
                 if (separe[0].trim().equalsIgnoreCase(nomeCrip)) {
-                    JOptionPane.showMessageDialog(null, "Este nome de usuário já existe, tente outro!");
+                    //JOptionPane.showMessageDialog(null, "Este nome de usuário já existe, tente outro!");
                     exist = false;
 
                     return null;
@@ -86,12 +87,12 @@ public class ServicoUsuarioImpl implements
         
         if(!validaUser(senhaCrip, validaPass)) return null;
         if(!confirmaSenha.equals(senha)){
-            JOptionPane.showMessageDialog(null, "As senhas não coincidem, confirme a senha corretamente!");
+            //JOptionPane.showMessageDialog(null, "As senhas não coincidem, confirme a senha corretamente!");
 
             return null;
         }
         
-        JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso");
+        //JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso");
         
         disp = true;
         TelaLogin login = new TelaLogin();
@@ -107,8 +108,27 @@ public class ServicoUsuarioImpl implements
     }
 
     @Override
-    public Usuario buscarPorNomeUsuario(String nomeUsuario) {
-    	return null;
+    public Usuario buscarPorNomeUsuario(String nomeUsuario) throws IOException {
+    	String path = "../ContactSchedule/src/main/resources/";
+		String caminho = new File(path + arq_dados_u).getCanonicalPath();
+		FileReader arquivo = new FileReader(caminho);
+		try (BufferedReader leitor = new BufferedReader(arquivo)) {
+			String linha = "";
+ 
+			while (linha != null) {
+				linha = leitor.readLine();
+				if (linha != null) {
+					String separe[] = linha.split("; ");
+					String descrip = descriptografa(separe[0]);
+					
+					if (descrip.trim().equals(nomeUsuario))
+						return usuarios.buscarPorNomeUsuario(nomeUsuario);
+				}
+			}
+		}
+		//JOptionPane.showMessageDialog(null, "Nenhum usuário foi encontrado!");
+
+		return null;
     }
 
     @Override
@@ -178,7 +198,6 @@ public class ServicoUsuarioImpl implements
                  separe = linha.split("; ");
                  linha = leitor.readLine();
                  u.setNomeUsuario(separe[0]);
-                 
              }
              
             if(!lista.contains(u)) lista.add(u);
@@ -223,13 +242,13 @@ public class ServicoUsuarioImpl implements
     @Override
     public boolean validaUser(String val, boolean match){
     		if(val.length() < 5 || val.length() > 15){
-                JOptionPane.showMessageDialog(null, "O nome de usuário e senha devem conter entre 5 e 15"
-                        + " caracteres!");
+                //JOptionPane.showMessageDialog(null, "O nome de usuário e senha devem conter entre 5 e 15"
+                //        + " caracteres!");
                 
                 return false;
             } else if(!match){
-                JOptionPane.showMessageDialog(null, "O nome de usuário e senha devem conter somente"
-                        + " letras[a-z] e números[0-9]!");
+                //JOptionPane.showMessageDialog(null, "O nome de usuário e senha devem conter somente"
+                //        + " letras[a-z] e números[0-9]!");
                 
                 return false;
             }
@@ -269,7 +288,7 @@ public class ServicoUsuarioImpl implements
             }
         }
         
-        JOptionPane.showMessageDialog(null, "Nome de usuário e/ou senha incorretos, tente novamente!");
+       // JOptionPane.showMessageDialog(null, "Nome de usuário e/ou senha incorretos, tente novamente!");
         
         
     }

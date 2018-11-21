@@ -11,6 +11,7 @@ import java.util.List;
 
 import controller.ServicoUsuarioImpl;
 import model.Usuario;
+import view.TelaListagem;
 
 public class UsuarioDAOImpl implements UsuarioDAO {
 
@@ -43,9 +44,18 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	}
 
 	@Override
-	public Usuario buscarPorNomeUsuario(String nomeUsuario) {
-		// TODO Auto-generated method stub
-		return null;
+	public Usuario buscarPorNomeUsuario(String nomeUsuario) throws IOException {
+		
+		TelaListagem listagem = new TelaListagem();
+		listagem.setVisible(true);
+		
+		Usuario u = new Usuario();
+
+		u.setNomeUsuario(nomeUsuario);
+		u.setSenha("");
+		u.setContatos(null);
+
+		return u;
 	}
 
 	@Override

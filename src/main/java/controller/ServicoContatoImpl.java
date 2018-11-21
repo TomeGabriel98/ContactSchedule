@@ -28,21 +28,23 @@ public class ServicoContatoImpl implements ServicoContato {
 	public static int opcao;
 	public static String nome = "";
 	private String arq_dados_c;
-	public ArrayList<String> arrayListar = new ArrayList<>();
+	public static ArrayList<String> arrayListar = new ArrayList<>();
 	public ArrayList<String> arrayBuscar = new ArrayList<>();
 	public boolean disp, exist;
 	private boolean validaUser, validaTel;
-	private ContatoDAOImpl contatos = new ContatoDAOImpl();
+	private ContatoDAOImpl contatos;
 
 	public ServicoContatoImpl(String nome_arq_dados_c) {
 		arq_dados_c = nome_arq_dados_c;
+		
+		contatos = new ContatoDAOImpl(arq_dados_c);
 	}
 
 	@Override
 	public Contato inserir(Contato c) throws IOException {
 		return contatos.inserir(c);
 	}
-
+ 
 	@Override
 	public Contato inserir(String nome, String tel, String email, String end) throws IOException {
 
@@ -53,89 +55,89 @@ public class ServicoContatoImpl implements ServicoContato {
 
 		// Nome
 		if (nome.trim().equals("")) {
-			JOptionPane.showMessageDialog(null, "O nome não pode estar vazio!");
+			//JOptionPane.showMessageDialog(null, "O nome não pode estar vazio!");
 
 			return null;
 		}
 
 		if (!validaUser) {
-			JOptionPane.showMessageDialog(null, "Nome só pode conter letras e números!");
+			//JOptionPane.showMessageDialog(null, "Nome só pode conter letras e números!");
 
 			return null;
 		}
 
 		// Telefone
 		if (!validaTel) {
-			JOptionPane.showMessageDialog(null, "Telefone deve conter apenas números");
+			//JOptionPane.showMessageDialog(null, "Telefone deve conter apenas números");
 
 			return null;
 		}
 		if (tel.length() < 8 || tel.length() > 20) {
-			JOptionPane.showMessageDialog(null, "Telefone deve conter entre 8 e 20 números!");
+			//JOptionPane.showMessageDialog(null, "Telefone deve conter entre 8 e 20 números!");
 
 			return null;
 		}
 
 		// Email
 		if (email.trim().equals("")) {
-			JOptionPane.showMessageDialog(null, "O email não deve ser vazio");
+			//JOptionPane.showMessageDialog(null, "O email não deve ser vazio");
 
 			return null;
 		}
 		if (email.length() == 1) {
-			JOptionPane.showMessageDialog(null, "O email não é válido!");
+			//JOptionPane.showMessageDialog(null, "O email não é válido!");
 
 			return null;
 		}
 		if (!email.contains("@")) {
-			JOptionPane.showMessageDialog(null, "O email deve conter 1 '@' !");
+			//JOptionPane.showMessageDialog(null, "O email deve conter 1 '@' !");
 
 			return null;
 		}
 		separeDominio = email.split("@");
 		if (separeDominio.length > 2) {
-			JOptionPane.showMessageDialog(null, "O email deve conter somente 1 '@' !");
+			//JOptionPane.showMessageDialog(null, "O email deve conter somente 1 '@' !");
 
 			return null;
 		}
 		if (separeDominio[0].isEmpty() || separeDominio[0].matches("[0-9]+") || separeDominio[0].contains(" ")) {
-			JOptionPane.showMessageDialog(null, "O endereço do email não pode ser vazio nem conter apenas números!");
+			//JOptionPane.showMessageDialog(null, "O endereço do email não pode ser vazio nem conter apenas números!");
 
 			return null;
 		}
 		if (separeDominio.length == 1) {
-			JOptionPane.showMessageDialog(null, "O domínio do email não pode estar vazio!");
+			//JOptionPane.showMessageDialog(null, "O domínio do email não pode estar vazio!");
 
 			return null;
 		}
 		char[] dominio = separeDominio[1].toCharArray();
 		if ((int) dominio[0] >= 32 && (int) dominio[0] <= 64 || (int) dominio[0] >= 91 && (int) dominio[0] <= 96
 				|| (int) dominio[0] >= 123) {
-			JOptionPane.showMessageDialog(null,
-					"Primeiro caractere do domínio não pode ser vazio e " + "deve ser uma letra!");
+			//JOptionPane.showMessageDialog(null,
+			//		"Primeiro caractere do domínio não pode ser vazio e " + "deve ser uma letra!");
 
 			return null;
 		}
 		if (!separeDominio[1].contains(".")) {
-			JOptionPane.showMessageDialog(null, "Domínio deve conter um ponto('.')!");
+			//JOptionPane.showMessageDialog(null, "Domínio deve conter um ponto('.')!");
 
 			return null;
 		}
 		separePonto = separeDominio[1].split("\\.");
 		if (separePonto.length == 1) {
-			JOptionPane.showMessageDialog(null, "Final do domínio não pode estar vazio!");
+			//JOptionPane.showMessageDialog(null, "Final do domínio não pode estar vazio!");
 
 			return null;
 		}
 		if (separePonto[1].length() == 0 || separePonto[1].contains(" ") || !separePonto[1].matches("[a-zA-Z]+")) {
-			JOptionPane.showMessageDialog(null, "Final do domínio não deve conter números nem ser vazio!");
+			//JOptionPane.showMessageDialog(null, "Final do domínio não deve conter números nem ser vazio!");
 
 			return null;
 		}
 
 		// Endereco
 		if (end.length() < 3 || end.length() > 255) {
-			JOptionPane.showMessageDialog(null, "Endereço deve conter entre 3 e 255 caracteres!");
+			//JOptionPane.showMessageDialog(null, "Endereço deve conter entre 3 e 255 caracteres!");
 
 			return null;
 		}
@@ -143,7 +145,7 @@ public class ServicoContatoImpl implements ServicoContato {
 		end = end.toLowerCase();
 		if (end.contains("lugar nenhum") || end.contains("judas perdeu as botas") || end.contains("casa da mãe joana")
 				|| end.contains("num sei")) {
-			JOptionPane.showMessageDialog(null, "Este endereço é inválido, sinto muito!");
+			//JOptionPane.showMessageDialog(null, "Este endereço é inválido, sinto muito!");
 
 			return null;
 		}
@@ -168,7 +170,7 @@ public class ServicoContatoImpl implements ServicoContato {
 				separe = linha.split("; ");
 				linha = leitor.readLine();
 				if (separe[0].trim().equalsIgnoreCase(c.getNome())) {
-					JOptionPane.showMessageDialog(null, "Este contato já existe!");
+					//JOptionPane.showMessageDialog(null, "Este contato já existe!");
 					exist = false;
 
 					return null;
@@ -183,10 +185,7 @@ public class ServicoContatoImpl implements ServicoContato {
 
 		disp = true;
 
-		if (opcao == 2)
-			JOptionPane.showMessageDialog(null, "Contato atualizado com sucesso!");
-		else
-			JOptionPane.showMessageDialog(null, "Contato cadastrado com sucesso!");
+		//JOptionPane.showMessageDialog(null, "Contato atualizado com sucesso!");
 
 		return inserir(c);
 
@@ -204,20 +203,20 @@ public class ServicoContatoImpl implements ServicoContato {
 				linha = leitor.readLine();
 				if (linha != null) {
 					String separe[] = linha.split("; ");
-					if (separe[0].trim().startsWith(parteNome))
+					if (separe[0].trim().contains(parteNome))
 						arrayBuscar.add(linha);
 				}
 			}
 		}
 
 		if (arrayBuscar.isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Nenhum contato foi encontrado!");
+			//JOptionPane.showMessageDialog(null, "Nenhum contato foi encontrado!");
 
 			return null;
 		} else {
 			nome = parteNome;
 			
-			return contatos.buscarPorParteNome(nome);	
+			return contatos.buscarPorParteNome(nome);
 		}	
 	}
 
@@ -248,13 +247,27 @@ public class ServicoContatoImpl implements ServicoContato {
 	}
 
 	@Override
-	public Contato atualizarContato(Contato cAnt, Contato cAtual) {
+	public Contato atualizarContato(Contato cAnt, Contato cAtual) throws IOException {
+		listarTodosContatos();
+		String[] separe;
+		for (String string : arrayListar) {
+			separe = string.split("; ");
+			
+			if(separe[0].equals(cAnt.getNome())) {
+				if(inserir(cAnt) != null) return contatos.atualizarContato(cAnt, cAtual);
+				
+				return null;
+			}
+		}
+		
+		
+		
 		return null;
 	}
 
 	@Override
 	public List<Contato> listarTodosContatos() throws IOException {
-		List<Contato> lista = new ArrayList<>();
+		arrayListar.clear();
 		String path = "../ContactSchedule/src/main/resources/";
 		String caminho = new File(path + arq_dados_c).getCanonicalPath();
 		FileReader arquivo = new FileReader(caminho);
@@ -278,16 +291,9 @@ public class ServicoContatoImpl implements ServicoContato {
 				}
 			}
 			
-			for (String user : arrayListar) {
-				Contato c = new Contato();
-
-				c.setNome(user);
-				lista.add(c);
-			}
-
-			return lista;
-			
-			//return contatos.listarTodosContatos();
+			if(!arrayListar.isEmpty()) return contatos.listarTodosContatos();
+		
+			return null;
 		}
 	}
 
